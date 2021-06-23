@@ -1,50 +1,23 @@
 package fr.insee.pogues.webservice.rest;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.IOException;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.Writer;
-import java.nio.charset.StandardCharsets;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.ws.rs.Consumes;
-import javax.ws.rs.POST;
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-import javax.ws.rs.Produces;
-import javax.ws.rs.WebApplicationException;
-import javax.ws.rs.core.Context;
-import javax.ws.rs.core.MediaType;
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.StreamingOutput;
-
+import fr.insee.pogues.persistence.service.QuestionnairesService;
+import fr.insee.pogues.transforms.*;
+import io.swagger.annotations.*;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import fr.insee.pogues.persistence.service.QuestionnairesService;
-import fr.insee.pogues.transforms.DDIToFO;
-import fr.insee.pogues.transforms.DDIToODT;
-import fr.insee.pogues.transforms.DDIToXForm;
-import fr.insee.pogues.transforms.FOToPDF;
-import fr.insee.pogues.transforms.JSONToXML;
-import fr.insee.pogues.transforms.PipeLine;
-import fr.insee.pogues.transforms.PoguesXMLToDDI;
-import fr.insee.pogues.transforms.Transformer;
-import fr.insee.pogues.transforms.XFormToURI;
-import fr.insee.pogues.transforms.XFormsToXFormsHack;
-import fr.insee.pogues.transforms.XMLToJSON;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiResponse;
-import io.swagger.annotations.ApiResponses;
+import javax.servlet.http.HttpServletRequest;
+import javax.ws.rs.*;
+import javax.ws.rs.core.Context;
+import javax.ws.rs.core.MediaType;
+import javax.ws.rs.core.Response;
+import javax.ws.rs.core.StreamingOutput;
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Main WebService class of the PoguesBOOrchestrator
@@ -86,6 +59,9 @@ public class PoguesTransforms {
 
 	@Autowired
 	QuestionnairesService questionnairesService;
+
+	@Autowired
+	XpathToVtl xpathToVtl;
 
 	@POST
 	@Path("visualize/{dataCollection}/{questionnaire}")
